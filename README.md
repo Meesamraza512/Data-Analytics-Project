@@ -20,8 +20,7 @@ pip install pandas numpy matplotlib seaborn jupyter
 ## Usage
 1. Clone the repository using the following command:
 ```bash
-[git clone https://github.com/yourusername/titanic-eda.git
-cd titanic-eda](https://github.com/Meesamraza512/Data-Analytics-Project/blob/57224e5483661fb895a628184f9c26ab75a9efdd/Exploratory%20Data%20Analysis%20on%20a%20Titanic%20Dataset.ipynb)
+(https://github.com/Meesamraza512/Data-Analytics-Project/blob/57224e5483661fb895a628184f9c26ab75a9efdd/Exploratory%20Data%20Analysis%20on%20a%20Titanic%20Dataset.ipynb)](https://github.com/Meesamraza512/Data-Analytics-Project/blob/57224e5483661fb895a628184f9c26ab75a9efdd/Exploratory%20Data%20Analysis%20on%20a%20Titanic%20Dataset.ipynb)
 ```
 2. Open the Jupyter Notebook:
 ```bash
