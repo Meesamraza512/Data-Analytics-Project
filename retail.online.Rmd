@@ -1,0 +1,205 @@
+---
+title: "practice"
+author: "Meesam Raza"
+date: "2025-01-12"
+output: html_document
+---
+
+
+```{r}
+# Load necessary libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Load the Excel file (update the file path if needed)
+
+data=read_excel(file.choose())
+
+# Display first few rows of the dataset
+head(data)
+```
+
+
+
+```{r}
+# check for missing values 
+sum(is.na(data))
+```
+
+
+
+```{r}
+# remove NA value
+data=na.omit(data)
+```
+
+
+
+
+
+```{r}
+# CEO Questions:
+# 1. Revenue Analysis (Calculate revenue per product and find top products)
+data <- data %>%
+  mutate(Revenue = Quantity * UnitPrice) # Add Revenue column
+
+top_products <- data %>%
+  group_by(Description) %>%
+  summarise(Total_Revenue = sum(Revenue, na.rm = TRUE)) %>%
+  arrange(desc(Total_Revenue)) %>%
+  head(10)
+
+print("Top 10 products by revenue:")
+print(top_products)
+
+
+```
+
+
+```{r}
+
+# 2. Geographic Insights (Total sales by country)
+sales_by_country <- data %>%
+  group_by(Country) %>%
+  summarise(Total_Sales = sum(Revenue)) %>%
+  arrange(desc(Total_Sales))  %>% 
+  head(10)
+  
+
+print("Sales by country:")
+print(sales_by_country)
+
+
+```
+
+
+```{r}
+# 3. Customer Segmentation (Total revenue by customer)
+customer_revenue <- data %>%
+  group_by(CustomerID) %>%
+  summarise(Total_Revenue = sum(Revenue)) %>%
+  arrange(desc(Total_Revenue)) %>% 
+  head(10)
+
+print("Top customers by revenue:")
+print(customer_revenue)
+
+
+```
+
+
+
+```{r}
+
+# top 10 customers by Total Sales
+library(ggplot2)
+
+ggplot(customer_revenue,aes(x=reorder(CustomerID,-Total_Revenue),y=Total_Revenue))+
+  geom_bar(stat="identity",fill="orange")+ 
+  theme_minimal() +
+  labs(title = "Top 10 customers by Total Sales",
+       x = "customers ID",
+       y = "revenue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+
+
+
+```{r}
+# 4. Inventory Management (Top-selling products by quantity)
+top_selling_products <- data %>%
+  group_by(Description) %>%
+  summarise(Total_Quantity = sum(Quantity)) %>%
+  arrange(desc(Total_Quantity)) %>%
+  head(10)
+
+print("Top 10 products by quantity sold:")
+print(top_selling_products)
+
+
+
+```
+
+
+
+
+```{r}
+
+# Top 10 Products by Quantity Sold
+library(ggplot2)
+# Assuming 'top_selling_products' is already calculated as per your code:
+# Creating a bar plot for the top 10 products by quantity sold
+ggplot(top_selling_products, aes(x = reorder(Description, -Total_Quantity), y = Total_Quantity)) +
+  geom_bar(stat = "identity", fill = "purple") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Top 10 Products by Quantity Sold",
+       x = "Product Description",
+       y = "Total Quantity Sold") 
+  
+```
+
+
+
+
+
+```{r}
+# CMO Questions:
+# 1. Top-Selling Products Visualization
+ggplot(top_products, aes(x = reorder(Description, -Total_Revenue), y = Total_Revenue)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Products by Revenue", x = "Products", y = "Revenue") +
+  theme_minimal()
+```
+
+
+
+
+```{r}
+# 2. Seasonality Trends (Sales over time)
+sales_over_time <- data %>%
+  mutate(InvoiceDate = as.Date(InvoiceDate)) %>%
+  group_by(InvoiceDate) %>%
+  summarise(Daily_Revenue = sum(Revenue))
+
+ggplot(sales_over_time, aes(x = InvoiceDate, y = Daily_Revenue)) +
+  geom_line(color = "blue",size = 1) +
+  labs(title = "Sales Trends Over Time", x = "Date", y = "Daily Revenue") +
+  theme_minimal()
+```
+
+
+
+
+```{r}
+# 3. Customer Behavior (High-value customers)
+high_value_customers <- customer_revenue %>%
+  filter(Total_Revenue > quantile(customer_revenue$Total_Revenue, 0.9))
+
+print("High-value customers:")
+print(high_value_customers)
+```
+
+
+
+
+```{r}
+# 4. Market Expansion (Country sales distribution)
+ggplot(sales_by_country, aes(x = reorder(Country, -Total_Sales), y = Total_Sales)) +
+  geom_bar(stat = "identity", fill = "green") +
+  coord_flip() +
+  labs(title = "Sales by Country", x = "Country", y = "Total Sales") +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
